@@ -3,10 +3,6 @@
     padding-right: 10%;
 }
 
-.login-container{
-    background-color: rgba(165, 176, 212, 0.2);
-}
-
-img{
+.login-container img{
     box-shadow: -10px 0 10px rgba(26, 86, 177, 0.3);
 }

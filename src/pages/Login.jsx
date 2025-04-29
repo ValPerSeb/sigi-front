@@ -3,7 +3,7 @@ import './Login.css'
 
 export default function Login() {
     return (
-        <div className='container-fluid login-container'>
+        <div className='login-container container-fluid'>
             <div className='row align-items-center'>
                 <div className='col'>
                     <form className='login-form'>

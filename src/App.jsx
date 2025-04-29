@@ -6,16 +6,17 @@ import "./App.css"
 
 function App() {
   return (
-    <>
+    <div className='app-container'>
       <Router>
         <Routes>
-          <Route path='/' element={<Dashboard />} />
+          <Route path='/' element={<Login />} />
+          <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/product-list' element={<Login />} />
         </Routes>
-        
       </Router>
       <Footer />
-    </>
+    </div>
   )
 }
 

@@ -1,4 +1,12 @@
-.btn-primary{
+.app-container {
+    background-color: rgba(165, 176, 212, 0.2) !important;
+}
+
+.btn-primary {
     background-color: rgba(26, 86, 177);
     border: none;
+}
+
+.row>* {
+    padding: 0 !important;
 }
