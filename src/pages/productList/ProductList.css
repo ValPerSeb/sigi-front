@@ -1,0 +1,18 @@
+.productlist-container {
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table th {
+    background-color: #007bff;
+    color: white;
+}

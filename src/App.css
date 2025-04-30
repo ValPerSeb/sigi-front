@@ -1,5 +1,15 @@
 .app-container {
     background-color: rgba(165, 176, 212, 0.2) !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 250px;
+    margin-top: 60px;
+    padding: 20px;
+    flex-grow: 1;
 }
 
 .btn-primary {
