@@ -42,7 +42,6 @@ export default function AddProductModal({ show, handleClose }) {
         <div className={`modal fade ${show ? 'show' : ''}`} tabIndex="-1" style={{ display: show ? 'block' : 'none' }} aria-hidden="true">
             <div className="modal-dialog">
                 <div className="modal-content">
-                    {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
                     <div className="modal-header">
                         <h5 className="modal-title">Agregar Producto</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleClose}></button>
@@ -139,8 +138,8 @@ export default function AddProductModal({ show, handleClose }) {
                                     required
                                 />
                             </div>
-
                             <button type="submit" className="btn btn-primary">Agregar</button>
+                            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
                         </form>
                     </div>
                 </div>
