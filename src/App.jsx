@@ -6,6 +6,7 @@ import "./App.css"
 import Header from './components/header/Header'
 import Sidebar from './components/sidebar/Sidebar'
 import ProductList from './pages/productList/ProductList'
+import ProductDetails from './pages/productDetail/ProductDetail'
 
 function App() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/product-list' element={<ProductList />} />
+          <Route path='/product/:id' element={<ProductDetails />} />
         </Routes>
       </div>
       <Footer />

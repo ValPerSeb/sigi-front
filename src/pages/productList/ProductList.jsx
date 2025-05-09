@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AddProductModal from '../../components/modal/AddProductModal';
 import './ProductList.css'
 import { productList } from '../../service/productService';
+import { Link } from 'react-router-dom';
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
@@ -59,7 +60,7 @@ export default function ProductList() {
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product.ProductId}>
-                                    <td>{product.ProductId}</td>
+                                    <td><Link to={`/product/${product.ProductId}`}>{product.ProductId}</Link></td>
                                     <td>{product.ProductName}</td>
                                     <td>{product.UnitPrice}</td>
                                     <td>{product.Stock}</td>

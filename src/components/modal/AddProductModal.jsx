@@ -1,32 +1,48 @@
 import { useState } from 'react';
+import { addProduct } from '../../service/productService';
 
 export default function AddProductModal({ show, handleClose }) {
     const [productData, setProductData] = useState({
-        productId: '',
+        id: '',
         productName: '',
-        unitPrice: '',
-        stock: '',
+        unitPrice: null,
+        stock: null,
         companyId: '',
         supplierId: '',
         categoryId: '',
         inventoryLocationId: ''
     });
+    const [alert, setAlert] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProductData({ ...productData, [name]: value });
+        setProductData(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Producto agregado:', productData);
-        handleClose();
+        try {
+            await addProduct(productData);
+            setAlert({
+                type: 'success',
+                message: 'Producto agregado con éxito'
+            });
+        } catch (error) {
+            setAlert({
+                type: 'danger',
+                message: 'Error agregando producto'
+            });
+        }
     };
 
     return (
         <div className={`modal fade ${show ? 'show' : ''}`} tabIndex="-1" style={{ display: show ? 'block' : 'none' }} aria-hidden="true">
             <div className="modal-dialog">
                 <div className="modal-content">
+                    {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
                     <div className="modal-header">
                         <h5 className="modal-title">Agregar Producto</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleClose}></button>
