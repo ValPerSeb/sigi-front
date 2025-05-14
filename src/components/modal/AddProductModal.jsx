@@ -1,18 +1,46 @@
-import { useState } from 'react';
-import { addProduct } from '../../service/productService';
+import { useState, useEffect } from 'react';
+import { productService, companyService, supplierService, categoryService, inventoryLocationService } from '../../api/services';
 
-export default function AddProductModal({ show, handleClose }) {
+export default function AddProductModal() {
+    const [companies, setCompanies] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [inventyoryLoc, setInventoryLoc] = useState([]);
     const [productData, setProductData] = useState({
-        id: '',
         productName: '',
-        unitPrice: null,
-        stock: null,
+        unitPrice: 0,
+        stock: 0,
         companyId: '',
         supplierId: '',
         categoryId: '',
         inventoryLocationId: ''
     });
     const [alert, setAlert] = useState(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const [companiesData, suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
+                companyService.list(),
+                supplierService.list(),
+                categoryService.list(),
+                inventoryLocationService.list()
+            ]);
+
+            setCompanies(companiesData.data);
+            setSuppliers(suppliersData.data);
+            setCategories(categoriesData.data);
+            setInventoryLoc(inventoryLocsData.data);
+        } catch (error) {
+            setAlert({
+                type: 'danger',
+                message: 'Error cargando listas'
+            });
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,11 +53,20 @@ export default function AddProductModal({ show, handleClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await addProduct(productData);
+            await productService.add(productData);
             setAlert({
                 type: 'success',
                 message: 'Producto agregado con éxito'
             });
+            setProductData({
+                productName: '',
+                unitPrice: 0,
+                stock: 0,
+                companyId: '',
+                supplierId: '',
+                categoryId: '',
+                inventoryLocationId: ''
+            })
         } catch (error) {
             setAlert({
                 type: 'danger',
@@ -39,12 +76,18 @@ export default function AddProductModal({ show, handleClose }) {
     };
 
     return (
-        <div className={`modal fade ${show ? 'show' : ''}`} tabIndex="-1" style={{ display: show ? 'block' : 'none' }} aria-hidden="true">
+        <div
+            className="modal fade"
+            id="addProductModal"
+            tabIndex="-1"
+            aria-labelledby="addProductModalLabel"
+            aria-hidden="true"
+        >
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">Agregar Producto</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleClose}></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
@@ -68,7 +111,7 @@ export default function AddProductModal({ show, handleClose }) {
                                     className="form-control"
                                     id="unitPrice"
                                     name="unitPrice"
-                                    value={productData.unitPrice}
+                                    value={productData.unitPrice || 0}
                                     onChange={handleChange}
                                     required
                                 />
@@ -81,63 +124,88 @@ export default function AddProductModal({ show, handleClose }) {
                                     className="form-control"
                                     id="stock"
                                     name="stock"
-                                    value={productData.stock}
+                                    value={productData.stock || 0}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="companyId" className="form-label">ID de la Compañía</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
+                                <label htmlFor="companyId" className="form-label">Compañía</label>
+                                <select
+                                    className="form-select"
                                     id="companyId"
                                     name="companyId"
                                     value={productData.companyId}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Selecciona una compañía</option>
+                                    {companies.map(company => (
+                                        <option key={company.CompanyId} value={company.CompanyId}>
+                                            {company.CompanyName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="supplierId" className="form-label">ID del Proveedor</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
+                                <label htmlFor="supplierId" className="form-label">Proveedor</label>
+                                <select
+                                    className="form-select"
                                     id="supplierId"
                                     name="supplierId"
                                     value={productData.supplierId}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Selecciona un proveedor</option>
+                                    {suppliers.map(supplier => (
+                                        <option key={supplier.SupplierId} value={supplier.SupplierId}>
+                                            {supplier.Name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="categoryId" className="form-label">ID de la Categoría</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
+                                <label htmlFor="categoryId" className="form-label">Categoría</label>
+                                <select
+                                    className="form-select"
                                     id="categoryId"
                                     name="categoryId"
                                     value={productData.categoryId}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Selecciona una categoría</option>
+                                    {categories.map(category => (
+                                        <option key={category.CategoryId} value={category.CategoryId}>
+                                            {category.CategoryName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="inventoryLocationId" className="form-label">ID de la Ubicación de Inventario</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
+                                <label htmlFor="inventoryLocationId" className="form-label">Ubicación de Inventario</label>
+                                <select
+                                    className="form-select"
                                     id="inventoryLocationId"
                                     name="inventoryLocationId"
                                     value={productData.inventoryLocationId}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Selecciona una ubicación</option>
+                                    {inventyoryLoc.map(location => (
+                                        <option key={location.InventoryLocationId} value={location.InventoryLocationId}>
+                                            {location.LocationName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
+
                             <button type="submit" className="btn btn-primary">Agregar</button>
                             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
                         </form>

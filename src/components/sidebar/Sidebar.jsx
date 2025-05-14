@@ -11,6 +11,7 @@ export default function Sidebar() {
         </li>
         <li className="nav-item">
           <Link className="nav-link" to="/product-list">Productos</Link>
+          <Link className="nav-link" to="/company-list">Compañías</Link>
         </li>
       </ul>
     </div>

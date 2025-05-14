@@ -5,8 +5,9 @@ import Login from './pages/login/Login'
 import "./App.css"
 import Header from './components/header/Header'
 import Sidebar from './components/sidebar/Sidebar'
-import ProductList from './pages/productList/ProductList'
+import ProductList from './pages/listPage/ProductList'
 import ProductDetails from './pages/productDetail/ProductDetail'
+import CompanyList from './pages/listPage/CompanyList'
 
 function App() {
   const location = useLocation();
@@ -25,6 +26,8 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/product-list' element={<ProductList />} />
           <Route path='/product/:id' element={<ProductDetails />} />
+          <Route path='/company-list' element={<CompanyList />} />
+          <Route path='/company/:id' element={<ProductDetails />} />
         </Routes>
       </div>
       <Footer />

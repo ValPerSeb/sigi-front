@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './ProductDetail.css';
-import { productDetails, updateProduct, deleteProduct } from '../../service/productService';
+import { productService } from '../../api/services';
 import { useParams, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../components/modal/ConfirmationModal';
 
@@ -27,7 +27,7 @@ export default function ProductDetails() {
 
     const fetchProduct = async () => {
         try {
-            let product = await productDetails(id);
+            let product = await productService.details(id);
             setProductData({
                 id: product.ProductId,
                 productName: product.ProductName,
@@ -59,7 +59,7 @@ export default function ProductDetails() {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            await updateProduct(id, productData);
+            await productService.update(id, productData);
             setAlert({
                 type: 'success',
                 message: 'Producto actualizado con éxito'
@@ -75,7 +75,7 @@ export default function ProductDetails() {
 
     const confirmDelete = async () => {
         try {
-            await deleteProduct(id);
+            await productService.remove(id);
             setShowDeleteModal(false);
             setAlert({
                 type: 'success',
