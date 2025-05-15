@@ -10,7 +10,7 @@ export default function Header() {
           <Link className="nav-link" to="#">UserName</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="#">Salir</Link>
+          <Link className="nav-link" to="/">Salir</Link>
         </li>
       </ul>
     </div>
