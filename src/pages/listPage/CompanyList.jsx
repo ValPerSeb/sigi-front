@@ -11,8 +11,8 @@ export default function CompanyList() {
     const [alert, setAlert] = useState(null);
     const [totalPages, setTotalPages] = useState(1);
     const [filters, setFilters] = useState({
-        searchBy: '',
-        searchValue: '',
+        searchBy: null,
+        searchValue: null,
         page: 1,
         limit: 10
     })
