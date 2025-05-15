@@ -1,20 +1,22 @@
 import { Routes, Route, useLocation  } from 'react-router-dom'
-import Footer from './components/footer/Footer'
-import Dashboard from './pages/dashboard/Dashboard'
-import Login from './pages/login/Login'
 import "./App.css"
 import Header from './components/header/Header'
+import Footer from './components/footer/Footer'
 import Sidebar from './components/sidebar/Sidebar'
-import ProductList from './pages/listPage/ProductList'
-import ProductDetails from './pages/productDetail/ProductDetail'
-import SupplierList from './pages/listPage/SupplierList'
-import CategoryList from './pages/listPage/CategoryList'
-import StockTransactionList from './pages/listPage/StockTransactionList'
-import InventoryLocationList from './pages/listPage/InventoryLocationList'
+import Dashboard from './pages/dashboard/Dashboard'
+import Login from './pages/authPages/Login'
+import ProductList from './pages/listPages/ProductList'
+import ProductDetails from './pages/detailPages/ProductDetail'
+import SupplierList from './pages/listPages/SupplierList'
+import CategoryList from './pages/listPages/CategoryList'
+import StockTransactionList from './pages/listPages/StockTransactionList'
+import InventoryLocationList from './pages/listPages/InventoryLocationList'
+import Register from './pages/authPages/Register'
+import PrivateRoute from './context/PrivateRoute'
 
 function App() {
   const location = useLocation();
-  const showNavbar = location.pathname !== '/';
+  const showNavbar = !['/', '/register'].includes(location.pathname);
   return (
     <div className='app-container'>
       {showNavbar && 
@@ -26,15 +28,19 @@ function App() {
       <div className='main-content'>
         <Routes>
           <Route path='/' element={<Login />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          
-          <Route path='/product-list' element={<ProductList />} />
-          <Route path='/supplier-list' element={<SupplierList />} />
-          <Route path='/category-list' element={<CategoryList />} />
-          <Route path='/inventoryLocation-list' element={<InventoryLocationList />} />
-          <Route path='/stockTransaction-list' element={<StockTransactionList />} />
+          <Route path='/register' element={<Register />} />
 
-          <Route path='/product/:id' element={<ProductDetails />} />
+          <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          
+          <Route path='/product-list' element={<PrivateRoute><ProductList /></PrivateRoute>} />
+          <Route path='/supplier-list' element={<PrivateRoute><SupplierList /></PrivateRoute>} />
+          <Route path='/category-list' element={<PrivateRoute><CategoryList /></PrivateRoute>} />
+          <Route path='/inventoryLocation-list' element={<PrivateRoute><InventoryLocationList /></PrivateRoute>} />
+          <Route path='/stockTransaction-list' element={<PrivateRoute><StockTransactionList /></PrivateRoute>} />
+
+          <Route path='/product/:id' element={<PrivateRoute><ProductDetails /></PrivateRoute>} />
+
+          {/*<Route path='/company-list' element={<PrivateRoute requiredRoles={['SUPER']}><StockTransactionList /></PrivateRoute>} />*/}
         </Routes>
       </div>
       <Footer />

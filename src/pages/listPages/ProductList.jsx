@@ -220,7 +220,7 @@ export default function ProductList() {
                                         <td>{x.ProductName}</td>
                                         <td>{x.UnitPrice}</td>
                                         <td>{x.Stock}</td>
-                                        <td>{x.CategoryId}</td>
+                                        <td>{x.CategoryName}</td>
                                     </tr>
                                 ))
                                 : <tr><td colSpan="5" className="text-center">No hay productos para mostrar</td></tr>

@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import './ProductDetail.css';
-import { productService, companyService, categoryService, supplierService, inventoryLocationService } from '../../api/services';
+import './DetailPage.css';
+import { productService, categoryService, supplierService, inventoryLocationService } from '../../api/services';
 import { useParams, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../components/modal/ConfirmationModal';
 
 export default function ProductDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [companies, setCompanies] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [categories, setCategories] = useState([]);
     const [inventyoryLoc, setInventoryLoc] = useState([]);
     const [productData, setProductData] = useState({
         id: '',
         productName: '',
-        unitPrice: null,
-        stock: null,
-        companyId: '',
+        unitPrice: undefined,
+        stock: undefined,
         supplierId: '',
         categoryId: '',
         inventoryLocationId: ''
@@ -34,11 +32,10 @@ export default function ProductDetails() {
         try {
             let product = await productService.details(id);
             setProductData({
-                id: product.ProductId,
+                id: product.Id,
                 productName: product.ProductName,
                 unitPrice: product.UnitPrice,
                 stock: product.Stock,
-                companyId: product.CompanyId,
                 supplierId: product.SupplierId,
                 categoryId: product.CategoryId,
                 inventoryLocationId: product.InventoryLocationId
@@ -55,14 +52,12 @@ export default function ProductDetails() {
 
     const fetchData = async () => {
         try {
-            const [companiesData, suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
-                companyService.list(),
+            const [suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
                 supplierService.list(),
                 categoryService.list(),
                 inventoryLocationService.list()
             ]);
 
-            setCompanies(companiesData.data);
             setSuppliers(suppliersData.data);
             setCategories(categoriesData.data);
             setInventoryLoc(inventoryLocsData.data);
@@ -184,25 +179,6 @@ export default function ProductDetails() {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="companyId" className="form-label">Compañía</label>
-                            <select
-                                className="form-select"
-                                id="companyId"
-                                name="companyId"
-                                value={productData.companyId}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="">Selecciona una compañía</option>
-                                {companies.map(company => (
-                                    <option key={company.CompanyId} value={company.CompanyId}>
-                                        {company.CompanyName}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
                             <label htmlFor="supplierId" className="form-label">Proveedor</label>
                             <select
                                 className="form-select"
@@ -214,8 +190,8 @@ export default function ProductDetails() {
                             >
                                 <option value="">Selecciona un proveedor</option>
                                 {suppliers.map(supplier => (
-                                    <option key={supplier.SupplierId} value={supplier.SupplierId}>
-                                        {supplier.Name}
+                                    <option key={supplier.Id} value={supplier.Id}>
+                                        {supplier.SupplierName}
                                     </option>
                                 ))}
                             </select>
@@ -233,7 +209,7 @@ export default function ProductDetails() {
                             >
                                 <option value="">Selecciona una categoría</option>
                                 {categories.map(category => (
-                                    <option key={category.CategoryId} value={category.CategoryId}>
+                                    <option key={category.Id} value={category.Id}>
                                         {category.CategoryName}
                                     </option>
                                 ))}
@@ -252,7 +228,7 @@ export default function ProductDetails() {
                             >
                                 <option value="">Selecciona una ubicación</option>
                                 {inventyoryLoc.map(location => (
-                                    <option key={location.InventoryLocationId} value={location.InventoryLocationId}>
+                                    <option key={location.Id} value={location.Id}>
                                         {location.LocationName}
                                     </option>
                                 ))}

@@ -17,6 +17,10 @@
     border: none;
 }
 
+a {
+    text-decoration: none !important;
+}
+
 .row>* {
     padding: 0 !important;
 }

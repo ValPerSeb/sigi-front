@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import { productService, companyService, supplierService, categoryService, inventoryLocationService } from '../../api/services';
 
 export default function AddProductModal() {
-    const [companies, setCompanies] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [categories, setCategories] = useState([]);
     const [inventyoryLoc, setInventoryLoc] = useState([]);
     const [productData, setProductData] = useState({
         productName: '',
-        unitPrice: 0,
-        stock: 0,
-        companyId: '',
+        unitPrice: undefined,
+        stock: undefined,
         supplierId: '',
         categoryId: '',
         inventoryLocationId: ''
@@ -23,14 +21,12 @@ export default function AddProductModal() {
 
     const fetchData = async () => {
         try {
-            const [companiesData, suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
-                companyService.list(),
+            const [suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
                 supplierService.list(),
                 categoryService.list(),
                 inventoryLocationService.list()
             ]);
 
-            setCompanies(companiesData.data);
             setSuppliers(suppliersData.data);
             setCategories(categoriesData.data);
             setInventoryLoc(inventoryLocsData.data);
@@ -60,9 +56,8 @@ export default function AddProductModal() {
             });
             setProductData({
                 productName: '',
-                unitPrice: 0,
-                stock: 0,
-                companyId: '',
+                unitPrice: undefined,
+                stock: undefined,
                 supplierId: '',
                 categoryId: '',
                 inventoryLocationId: ''
@@ -131,25 +126,6 @@ export default function AddProductModal() {
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="companyId" className="form-label">Compañía</label>
-                                <select
-                                    className="form-select"
-                                    id="companyId"
-                                    name="companyId"
-                                    value={productData.companyId}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Selecciona una compañía</option>
-                                    {companies.map(company => (
-                                        <option key={company.CompanyId} value={company.CompanyId}>
-                                            {company.CompanyName}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="mb-3">
                                 <label htmlFor="supplierId" className="form-label">Proveedor</label>
                                 <select
                                     className="form-select"
@@ -161,8 +137,8 @@ export default function AddProductModal() {
                                 >
                                     <option value="">Selecciona un proveedor</option>
                                     {suppliers.map(supplier => (
-                                        <option key={supplier.SupplierId} value={supplier.SupplierId}>
-                                            {supplier.Name}
+                                        <option key={supplier.Id} value={supplier.Id}>
+                                            {supplier.SupplierName}
                                         </option>
                                     ))}
                                 </select>
@@ -180,7 +156,7 @@ export default function AddProductModal() {
                                 >
                                     <option value="">Selecciona una categoría</option>
                                     {categories.map(category => (
-                                        <option key={category.CategoryId} value={category.CategoryId}>
+                                        <option key={category.Id} value={category.Id}>
                                             {category.CategoryName}
                                         </option>
                                     ))}
@@ -199,7 +175,7 @@ export default function AddProductModal() {
                                 >
                                     <option value="">Selecciona una ubicación</option>
                                     {inventyoryLoc.map(location => (
-                                        <option key={location.InventoryLocationId} value={location.InventoryLocationId}>
+                                        <option key={location.Id} value={location.Id}>
                                             {location.LocationName}
                                         </option>
                                     ))}

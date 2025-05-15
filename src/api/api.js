@@ -7,6 +7,23 @@ const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const postLogin = async (data) => {
+    try {
+      const res = await apiClient.post('/login', data);
+      return res.data;
+    } catch (error) {
+      throw new Error(error.message || `Error en login`);
+    }
+}
+
 export const createCRUDService = (endpoint) => ({
   list: async (filters = {}) => {
     try {
