@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import './ProductDetail.css';
-import { productService } from '../../api/services';
+import { productService, companyService, categoryService, supplierService, inventoryLocationService } from '../../api/services';
 import { useParams, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../components/modal/ConfirmationModal';
 
 export default function ProductDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [companies, setCompanies] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [inventyoryLoc, setInventoryLoc] = useState([]);
     const [productData, setProductData] = useState({
         id: '',
         productName: '',
@@ -23,6 +27,7 @@ export default function ProductDetails() {
 
     useEffect(() => {
         fetchProduct();
+        fetchData();
     }, []);
 
     const fetchProduct = async () => {
@@ -47,6 +52,27 @@ export default function ProductDetails() {
             setLoading(false);
         }
     }
+
+    const fetchData = async () => {
+        try {
+            const [companiesData, suppliersData, categoriesData, inventoryLocsData] = await Promise.all([
+                companyService.list(),
+                supplierService.list(),
+                categoryService.list(),
+                inventoryLocationService.list()
+            ]);
+
+            setCompanies(companiesData.data);
+            setSuppliers(suppliersData.data);
+            setCategories(categoriesData.data);
+            setInventoryLoc(inventoryLocsData.data);
+        } catch (error) {
+            setAlert({
+                type: 'danger',
+                message: 'Error cargando listas'
+            });
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -100,10 +126,10 @@ export default function ProductDetails() {
 
     return (
         <div className='productDetails-container container-fluid'>
-            <ConfirmationModal 
-                show={showDeleteModal} 
-                handleClose={() => setShowDeleteModal(false)} 
-                handleConfirm={confirmDelete} 
+            <ConfirmationModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
                 title={'Confirmar eliminación'}
                 description={'¿Estás seguro de que deseas eliminar este producto?'}
             />
@@ -158,55 +184,79 @@ export default function ProductDetails() {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="companyId" className="form-label">ID de la Compañía</label>
-                            <input
-                                type="text"
-                                className="form-control"
+                            <label htmlFor="companyId" className="form-label">Compañía</label>
+                            <select
+                                className="form-select"
                                 id="companyId"
                                 name="companyId"
-                                value={productData?.companyId}
+                                value={productData.companyId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="">Selecciona una compañía</option>
+                                {companies.map(company => (
+                                    <option key={company.CompanyId} value={company.CompanyId}>
+                                        {company.CompanyName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="supplierId" className="form-label">ID del Proveedor</label>
-                            <input
-                                type="text"
-                                className="form-control"
+                            <label htmlFor="supplierId" className="form-label">Proveedor</label>
+                            <select
+                                className="form-select"
                                 id="supplierId"
                                 name="supplierId"
-                                value={productData?.supplierId}
+                                value={productData.supplierId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="">Selecciona un proveedor</option>
+                                {suppliers.map(supplier => (
+                                    <option key={supplier.SupplierId} value={supplier.SupplierId}>
+                                        {supplier.Name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="categoryId" className="form-label">ID de la Categoría</label>
-                            <input
-                                type="text"
-                                className="form-control"
+                            <label htmlFor="categoryId" className="form-label">Categoría</label>
+                            <select
+                                className="form-select"
                                 id="categoryId"
                                 name="categoryId"
-                                value={productData?.categoryId}
+                                value={productData.categoryId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="">Selecciona una categoría</option>
+                                {categories.map(category => (
+                                    <option key={category.CategoryId} value={category.CategoryId}>
+                                        {category.CategoryName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="inventoryLocationId" className="form-label">ID de la Ubicación de Inventario</label>
-                            <input
-                                type="text"
-                                className="form-control"
+                            <label htmlFor="inventoryLocationId" className="form-label">Ubicación de Inventario</label>
+                            <select
+                                className="form-select"
                                 id="inventoryLocationId"
                                 name="inventoryLocationId"
-                                value={productData?.inventoryLocationId}
+                                value={productData.inventoryLocationId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="">Selecciona una ubicación</option>
+                                {inventyoryLoc.map(location => (
+                                    <option key={location.InventoryLocationId} value={location.InventoryLocationId}>
+                                        {location.LocationName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </form>
                 </div>

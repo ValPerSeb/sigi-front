@@ -11,7 +11,10 @@ export default function Sidebar() {
         </li>
         <li className="nav-item">
           <Link className="nav-link" to="/product-list">Productos</Link>
-          <Link className="nav-link" to="/suppliers-list">Provedores</Link>
+          <Link className="nav-link" to="/supplier-list">Proveedores</Link>
+          <Link className="nav-link" to="/category-list">Categorías</Link>
+          <Link className="nav-link" to="/inventoryLocation-list">Ubicaciones</Link>
+          <Link className="nav-link" to="/stockTransaction-list">Historial</Link>
         </li>
       </ul>
     </div>
