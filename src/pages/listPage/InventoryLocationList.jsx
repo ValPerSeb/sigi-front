@@ -142,8 +142,8 @@ export default function InventoryLocationList() {
                         <tbody>
                             {inventoryLocations?.length >= 1
                                 ? inventoryLocations.map((x) => (
-                                    <tr key={x.ProductId}>
-                                        <td><Link to={`/stockTransaction/${x.InventoryLocationId}`}>{x.InventoryLocationId}</Link></td>
+                                    <tr key={x.Id}>
+                                        <td><Link to={`/stockTransaction/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.LocationName}</td>
                                         <td>{x.LocationCode}</td>
                                         <td>{x.Capacity}</td>

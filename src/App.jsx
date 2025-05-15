@@ -27,12 +27,14 @@ function App() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
+          
           <Route path='/product-list' element={<ProductList />} />
-          <Route path='/product/:id' element={<ProductDetails />} />
           <Route path='/supplier-list' element={<SupplierList />} />
           <Route path='/category-list' element={<CategoryList />} />
           <Route path='/inventoryLocation-list' element={<InventoryLocationList />} />
           <Route path='/stockTransaction-list' element={<StockTransactionList />} />
+
+          <Route path='/product/:id' element={<ProductDetails />} />
         </Routes>
       </div>
       <Footer />

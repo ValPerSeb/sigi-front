@@ -113,23 +113,21 @@ export default function StockTransactionList() {
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Producto</th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Tipo</th>
-                                <th scope="col">Cantidad</th>
+                                <th scope="col">Producto</th>
                                 <th scope="col">Usuario</th>
                             </tr>
                         </thead>
                         <tbody>
                             {stockTransactions?.length >= 1
                                 ? stockTransactions.map((x) => (
-                                    <tr key={x.StockTransactionId}>
-                                        <td><Link to={`/stockTransaction/${x.TransactionId}`}>{x.TransactionId}</Link></td>
-                                        <td>{x.ProductName}</td>
+                                    <tr key={x.Id}>
+                                        <td><Link to={`/stockTransaction/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.Date}</td>
-                                        <td>{x.TransactionType}</td>
-                                        <td>{x.QuantityChange}</td>
-                                        <td>{x.UserName}</td>
+                                        <td>{x.Type}</td>
+                                        <td>{x.ProductId}</td>
+                                        <td>{x.UserId}</td>
                                     </tr>
                                 ))
                                 : <tr><td colSpan="6" className="text-center">No hay transacciones para mostrar</td></tr>

@@ -122,9 +122,9 @@ export default function SupplierList() {
                         <tbody>
                             {suppliers?.length >= 1
                                 ? suppliers.map((x) => (
-                                    <tr key={x.SupplierId}>
-                                        <td><Link to={`/supplier/${x.SupplierId}`}>{x.SupplierId}</Link></td>
-                                        <td>{x.Name}</td>
+                                    <tr key={x.Id}>
+                                        <td><Link to={`/supplier/${x.Id}`}>{x.Id}</Link></td>
+                                        <td>{x.SupplierName}</td>
                                     </tr>
                                 ))
                                 : <tr><td colSpan="2" className="text-center">No hay proveedores para mostrar</td></tr>

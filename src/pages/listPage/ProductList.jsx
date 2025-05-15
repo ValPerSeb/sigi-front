@@ -158,7 +158,7 @@ export default function ProductList() {
                                     {searchBy === 'CategoryId' && <>
                                         <option value="">Todas las categorías</option>
                                         {categories.map((item) => (
-                                            <option key={item.CategoryId} value={item.CategoryId}>
+                                            <option key={item.Id} value={item.Id}>
                                                 {item.CategoryName}
                                             </option>
                                         ))}
@@ -166,15 +166,15 @@ export default function ProductList() {
                                     {searchBy === 'SupplierId' && <>
                                         <option value="">Todos los proveedores</option>
                                         {suppliers.map((item) => (
-                                            <option key={item.SupplierId} value={item.SupplierId}>
-                                                {item.Name}
+                                            <option key={item.Id} value={item.Id}>
+                                                {item.SupplierName}
                                             </option>
                                         ))}
                                     </>}
                                     {searchBy === 'InventoryLocationId' && <>
                                         <option value="">Todas las ubicaciones</option>
                                         {inventyoryLoc.map((item) => (
-                                            <option key={item.InventoryLocationId} value={item.InventoryLocationId}>
+                                            <option key={item.Id} value={item.Id}>
                                                 {item.LocationName}
                                             </option>
                                         ))}
@@ -215,8 +215,8 @@ export default function ProductList() {
                         <tbody>
                             {products?.length >= 1
                                 ? products.map((x) => (
-                                    <tr key={x.ProductId}>
-                                        <td><Link to={`/product/${x.ProductId}`}>{x.ProductId}</Link></td>
+                                    <tr key={x.Id}>
+                                        <td><Link to={`/product/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.ProductName}</td>
                                         <td>{x.UnitPrice}</td>
                                         <td>{x.Stock}</td>

@@ -123,8 +123,8 @@ export default function CategoryList() {
                         <tbody>
                             {categories?.length >= 1
                                 ? categories.map((x) => (
-                                    <tr key={x.CategoryId}>
-                                        <td><Link to={`/category/${x.CategoryId}`}>{x.CategoryId}</Link></td>
+                                    <tr key={x.Id}>
+                                        <td><Link to={`/category/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.CategoryName}</td>
                                         <td>{x.CategoryColor}</td>
                                     </tr>
