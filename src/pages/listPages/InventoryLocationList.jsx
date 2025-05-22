@@ -84,7 +84,7 @@ export default function InventoryLocationList() {
     if (loading) return <div>Cargando...</div>;
 
     return (
-        <div className='productlist-container container-fluid'>
+        <div className='invlist-container container-fluid'>
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Ubicaciones en Bodega</h1>
             <div className="row mb-3 mt-5 align-items-center">

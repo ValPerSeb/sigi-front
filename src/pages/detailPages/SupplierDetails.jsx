@@ -134,7 +134,7 @@ export default function SupplierDetails() {
     if (loading) return <div>Cargando...</div>;
 
     return (
-        <div className='productDetails-container container-fluid'>
+        <div className='supplierdetails-container container-fluid'>
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Detalles del Proveedor</h1>
             <div className="row mb-3 align-items-center">

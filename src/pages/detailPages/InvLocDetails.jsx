@@ -110,7 +110,7 @@ export default function InvLocDetails() {
     if (loading) return <div>Cargando...</div>;
 
     return (
-        <div className='productDetails-container container-fluid'>
+        <div className='invdetails-container container-fluid'>
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Detalles de la Ubicación de inventario</h1>
             <div className="row mb-3 align-items-center">

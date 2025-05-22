@@ -15,13 +15,29 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+function getServerErrorMessage(error, defaultMsg) {
+  if (error.response && error.response.data && error.response.data.message) {
+    return error.response.data.message;
+  }
+  return error.message || defaultMsg;
+}
+
 export const postLogin = async (data) => {
-    try {
-      const res = await apiClient.post('/login', data);
-      return res.data;
-    } catch (error) {
-      throw new Error(error.message || `Error en login`);
-    }
+  try {
+    const res = await apiClient.post('/login', data);
+    return res.data;
+  } catch (error) {
+    throw new Error(getServerErrorMessage(error, 'Error en login'));
+  }
+}
+
+export const getDashboard = async () => {
+  try {
+    const res = await apiClient.get('/dashboard');
+    return res.data;
+  } catch (error) {
+    throw new Error(getServerErrorMessage(error, 'Error al obtener dashboard'));
+  }
 }
 
 export const createCRUDService = (endpoint) => ({
@@ -30,7 +46,7 @@ export const createCRUDService = (endpoint) => ({
       const res = await apiClient.get(`/${endpoint}`, { params: filters });
       return res.data;
     } catch (error) {
-      throw new Error(error.message || `Error al obtener ${endpoint} list`);
+      throw new Error(getServerErrorMessage(error, `Error al obtener ${endpoint} list`));
     }
   },
 
@@ -39,7 +55,7 @@ export const createCRUDService = (endpoint) => ({
       const res = await apiClient.get(`/${endpoint}/${id}`);
       return res.data;
     } catch (error) {
-      throw new Error(error.message || `Error al obtener detalles de ${endpoint}`);
+      throw new Error(getServerErrorMessage(error, `Error al obtener detalles de ${endpoint}`));
     }
   },
 
@@ -48,7 +64,7 @@ export const createCRUDService = (endpoint) => ({
       const res = await apiClient.post(`/${endpoint}`, data);
       return res.data;
     } catch (error) {
-      throw new Error(error.message || `Error al crear ${endpoint}`);
+      throw new Error(getServerErrorMessage(error, `Error al crear ${endpoint}`));
     }
   },
 
@@ -57,7 +73,7 @@ export const createCRUDService = (endpoint) => ({
       const res = await apiClient.put(`/${endpoint}/${id}`, data);
       return res.data;
     } catch (error) {
-      throw new Error(error.message || `Error al actualizar ${endpoint}`);
+      throw new Error(getServerErrorMessage(error, `Error al actualizar ${endpoint}`));
     }
   },
 
@@ -66,7 +82,7 @@ export const createCRUDService = (endpoint) => ({
       const res = await apiClient.delete(`/${endpoint}/${id}`);
       return res.data;
     } catch (error) {
-      throw new Error(error.message || `Error al eliminar ${endpoint}`);
+      throw new Error(getServerErrorMessage(error, `Error al eliminar ${endpoint}`));
     }
   },
 });

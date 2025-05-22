@@ -82,7 +82,7 @@ export default function SupplierList() {
     if (loading) return <div>Cargando...</div>;
 
     return (
-        <div className='productlist-container container-fluid'>
+        <div className='supplierlist-container container-fluid'>
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Proveedores</h1>
             <div className="row mb-3 mt-5 align-items-center">

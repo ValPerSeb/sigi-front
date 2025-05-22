@@ -82,7 +82,7 @@ export default function CategoryList() {
     if (loading) return <div>Cargando...</div>;
 
     return (
-        <div className='productlist-container container-fluid'>
+        <div className='categorylist-container container-fluid'>
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Categorías</h1>
             <div className="row mb-3 mt-5 align-items-center">
