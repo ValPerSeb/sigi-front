@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { productService, companyService, supplierService, categoryService, inventoryLocationService } from '../../api/services';
+import { productService, supplierService, categoryService, inventoryLocationService } from '../../api/services';
 
-export default function AddProductModal() {
+export default function AddProductModal({onClose}) {
     const [suppliers, setSuppliers] = useState([]);
     const [categories, setCategories] = useState([]);
     const [inventyoryLoc, setInventoryLoc] = useState([]);
     const [productData, setProductData] = useState({
         productName: '',
-        unitPrice: undefined,
-        stock: undefined,
+        unitPrice: 0,
+        stock: 0,
         supplierId: '',
         categoryId: '',
         inventoryLocationId: ''
@@ -18,6 +18,13 @@ export default function AddProductModal() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     const fetchData = async () => {
         try {
@@ -56,8 +63,8 @@ export default function AddProductModal() {
             });
             setProductData({
                 productName: '',
-                unitPrice: undefined,
-                stock: undefined,
+                unitPrice: 0,
+                stock: 0,
                 supplierId: '',
                 categoryId: '',
                 inventoryLocationId: ''
@@ -69,6 +76,21 @@ export default function AddProductModal() {
             });
         }
     };
+
+    const handleClose = () => {
+        setProductData({
+            productName: '',
+            unitPrice: 0,
+            stock: 0,
+            supplierId: '',
+            categoryId: '',
+            inventoryLocationId: ''
+        });
+        setAlert(null);
+        if (onClose) {
+            onClose();
+        }
+    }
 
     return (
         <div
@@ -82,7 +104,7 @@ export default function AddProductModal() {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">Agregar Producto</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" onClick={handleClose} className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
@@ -106,7 +128,7 @@ export default function AddProductModal() {
                                     className="form-control"
                                     id="unitPrice"
                                     name="unitPrice"
-                                    value={productData.unitPrice || 0}
+                                    value={productData.unitPrice}
                                     onChange={handleChange}
                                     required
                                 />
@@ -119,7 +141,7 @@ export default function AddProductModal() {
                                     className="form-control"
                                     id="stock"
                                     name="stock"
-                                    value={productData.stock || 0}
+                                    value={productData.stock}
                                     onChange={handleChange}
                                     required
                                 />
@@ -183,7 +205,7 @@ export default function AddProductModal() {
                             </div>
 
                             <button type="submit" className="btn btn-primary">Agregar</button>
-                            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
+                            {alert && <div className={`mt-3 alert alert-${alert.type}`}>{alert.message}</div>}
                         </form>
                     </div>
                 </div>

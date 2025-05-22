@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
-import AddProductModal from '../../components/modal/AddProductModal';
 import './ListPage.css'
 import { inventoryLocationService } from '../../api/services';
-import { Link } from 'react-router-dom';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
+import AddInvLocationModal from '../../components/modal/AddInvLocationModal';
 
 export default function InventoryLocationList() {
     const [inventoryLocations, setInventoryLoc] = useState([]);
@@ -23,6 +22,20 @@ export default function InventoryLocationList() {
     useEffect(() => {
         fetch();
     }, [filters]);
+
+    useEffect(() => {
+        if (location.state?.alert) {
+            window.history.replaceState({}, document.title);
+            setAlert(location.state.alert);
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     useEffect(() => {
         setIsListFilter(searchBy === 'IsActive');
@@ -68,10 +81,10 @@ export default function InventoryLocationList() {
     }
 
     if (loading) return <div>Cargando...</div>;
-    if (alert) return <div className={`alert alert-${alert.type}`}>{alert.message}</div>
 
     return (
         <div className='productlist-container container-fluid'>
+            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Ubicaciones en Bodega</h1>
             <div className="row mb-3 mt-5 align-items-center">
                 <div className="col-md-6">
@@ -123,7 +136,7 @@ export default function InventoryLocationList() {
                     </div>
                 </div>
                 <div className="col-md-6 d-flex justify-content-end">
-                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">Agregar</button>
+                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInvLocationModal">Agregar</button>
                 </div>
             </div>
             <div className='row align-items-center'>
@@ -143,7 +156,7 @@ export default function InventoryLocationList() {
                             {inventoryLocations?.length >= 1
                                 ? inventoryLocations.map((x) => (
                                     <tr key={x.Id}>
-                                        <td><Link to={`/stockTransaction/${x.Id}`}>{x.Id}</Link></td>
+                                        <td>{x.Id}</td>
                                         <td>{x.LocationName}</td>
                                         <td>{x.LocationCode}</td>
                                         <td>{x.Capacity}</td>
@@ -162,7 +175,7 @@ export default function InventoryLocationList() {
                     />
                 </div>
             </div>
-            <AddProductModal />
+            <AddInvLocationModal onClose={fetch} />
         </div>
     )
 }

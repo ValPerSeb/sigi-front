@@ -13,6 +13,7 @@ import StockTransactionList from './pages/listPages/StockTransactionList'
 import InventoryLocationList from './pages/listPages/InventoryLocationList'
 import Register from './pages/authPages/Register'
 import PrivateRoute from './context/PrivateRoute'
+import SupplierDetails from './pages/detailPages/SupplierDetails'
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
           <Route path='/stockTransaction-list' element={<PrivateRoute><StockTransactionList /></PrivateRoute>} />
 
           <Route path='/product/:id' element={<PrivateRoute><ProductDetails /></PrivateRoute>} />
+          <Route path='/supplier/:id' element={<PrivateRoute><SupplierDetails /></PrivateRoute>} />
 
           {/*<Route path='/company-list' element={<PrivateRoute requiredRoles={['SUPER']}><StockTransactionList /></PrivateRoute>} />*/}
         </Routes>

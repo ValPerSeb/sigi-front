@@ -28,6 +28,13 @@ export default function ProductDetails() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
+
     const fetchProduct = async () => {
         try {
             let product = await productService.details(id);
@@ -85,7 +92,6 @@ export default function ProductDetails() {
                 type: 'success',
                 message: 'Producto actualizado con éxito'
             });
-            setTimeout(() => setAlert(null), 6000)
         } catch (error) {
             setAlert({
                 type: 'danger',
@@ -98,18 +104,21 @@ export default function ProductDetails() {
         try {
             await productService.remove(id);
             setShowDeleteModal(false);
-            setAlert({
-                type: 'success',
-                message: 'Producto eliminado con éxito'
+            navigate('/product-list', {
+                state: {
+                    alert: {
+                        type: 'success',
+                        message: 'Producto eliminado con éxito'
+                    }
+                }
             });
-            setTimeout(() => setAlert(null), 6000);
-            navigate('/product-list');
+            
         } catch (error) {
+            setShowDeleteModal(false);
             setAlert({
                 type: 'danger',
                 message: error.message || 'Error al eliminar el producto'
             });
-            setShowDeleteModal(false);
         }
     };
 
@@ -117,17 +126,10 @@ export default function ProductDetails() {
         setShowDeleteModal(true);
     }
 
-    if (loading) return <div>Cargando producto...</div>;
+    if (loading) return <div>Cargando...</div>;
 
     return (
         <div className='productDetails-container container-fluid'>
-            <ConfirmationModal
-                show={showDeleteModal}
-                handleClose={() => setShowDeleteModal(false)}
-                handleConfirm={confirmDelete}
-                title={'Confirmar eliminación'}
-                description={'¿Estás seguro de que deseas eliminar este producto?'}
-            />
             {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Detalles del Producto</h1>
             <div className="row mb-3 align-items-center">
@@ -237,6 +239,13 @@ export default function ProductDetails() {
                     </form>
                 </div>
             </div>
+            <ConfirmationModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title={'Confirmar eliminación'}
+                description={'¿Estás seguro de que deseas eliminar este producto?'}
+            />
         </div>
     )
 }

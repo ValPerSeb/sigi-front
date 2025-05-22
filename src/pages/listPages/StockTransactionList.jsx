@@ -65,10 +65,10 @@ export default function StockTransactionList() {
     }
 
     if (loading) return <div>Cargando...</div>;
-    if (alert) return <div className={`alert alert-${alert.type}`}>{alert.message}</div>
 
     return (
         <div className='productlist-container container-fluid'>
+            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Historial de Transacciones</h1>
             <div className="row mb-3 mt-5 align-items-center">
                 <div className="col-md-6">

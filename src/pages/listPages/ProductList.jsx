@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import AddProductModal from '../../components/modal/AddProductModal';
 import './ListPage.css'
 import { productService, categoryService, inventoryLocationService, supplierService } from '../../api/services';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
 
 export default function ProductList() {
+    const location = useLocation();
     const [products, setProducts] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -43,7 +44,21 @@ export default function ProductList() {
             page: 1,
             limit: 10
         })
-    }, [searchBy])
+    }, [searchBy]);
+
+    useEffect(() => {
+        if (location.state?.alert) {
+            window.history.replaceState({}, document.title);
+            setAlert(location.state.alert);
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     const fetch = async () => {
         try {
@@ -121,10 +136,10 @@ export default function ProductList() {
     }
 
     if (loading) return <div>Cargando...</div>;
-    if (alert) return <div className={`alert alert-${alert.type}`}>{alert.message}</div>
 
     return (
         <div className='productlist-container container-fluid'>
+            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Productos</h1>
             <div className="row mb-3 mt-5 align-items-center">
                 <div className="col-md-6">
@@ -234,7 +249,7 @@ export default function ProductList() {
                     />
                 </div>
             </div>
-            <AddProductModal />
+            <AddProductModal onClose={fetch}/>
         </div>
     )
 }

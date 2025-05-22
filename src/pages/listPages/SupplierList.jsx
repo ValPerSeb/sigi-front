@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import AddProductModal from '../../components/modal/AddProductModal';
 import './ListPage.css'
 import { supplierService } from '../../api/services';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
+import AddSupplierModal from '../../components/modal/AddSupplierModal';
 
 export default function SupplierList() {
+    const location = useLocation();
     const [suppliers, setSuppliers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(null);
@@ -22,6 +23,20 @@ export default function SupplierList() {
     useEffect(() => {
         fetch();
     }, [filters]);
+
+    useEffect(() => {
+        if (location.state?.alert) {
+            window.history.replaceState({}, document.title);
+            setAlert(location.state.alert);
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     useEffect(() => {
         setFilters({
@@ -66,10 +81,10 @@ export default function SupplierList() {
     }
 
     if (loading) return <div>Cargando...</div>;
-    if (alert) return <div className={`alert alert-${alert.type}`}>{alert.message}</div>
 
     return (
         <div className='productlist-container container-fluid'>
+            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <h1>Lista de Proveedores</h1>
             <div className="row mb-3 mt-5 align-items-center">
                 <div className="col-md-6">
@@ -107,7 +122,7 @@ export default function SupplierList() {
                     </div>
                 </div>
                 <div className="col-md-6 d-flex justify-content-end">
-                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">Agregar</button>
+                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSupplierModal">Agregar</button>
                 </div>
             </div>
             <div className='row align-items-center'>
@@ -138,7 +153,7 @@ export default function SupplierList() {
                     />
                 </div>
             </div>
-            <AddProductModal />
+            <AddSupplierModal onClose={fetch}/>
         </div>
     )
 }
