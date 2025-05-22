@@ -91,6 +91,7 @@ export default function AddCategoryModal({onClose}) {
                                     className="form-control"
                                     id="color"
                                     name="color"
+                                    placeholder='#FFFFFF'
                                     value={categoryData.color}
                                     onChange={handleChange}
                                     required

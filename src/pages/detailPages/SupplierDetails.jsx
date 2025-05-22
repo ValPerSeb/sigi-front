@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './DetailPage.css';
 import { supplierService, addressService } from '../../api/services';
 import { useParams, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../components/modal/ConfirmationModal';

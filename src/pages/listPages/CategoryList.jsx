@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import './ListPage.css'
 import { categoryService } from '../../api/services';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
 import AddCategoryModal from '../../components/modal/AddCategoryModal';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function CategoryList() {
+    const location = useLocation();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(null);
@@ -125,7 +126,7 @@ export default function CategoryList() {
             </div>
             <div className='row align-items-center'>
                 <div className="col-12">
-                    <table className="table table-hover">
+                    <table className="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -137,9 +138,22 @@ export default function CategoryList() {
                             {categories?.length >= 1
                                 ? categories.map((x) => (
                                     <tr key={x.Id}>
-                                        <td>{x.Id}</td>
+                                        <td><Link to={`/category/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.CategoryName}</td>
-                                        <td>{x.CategoryColor}</td>
+                                        <td>
+                                            <span
+                                                style={{
+                                                    display: 'inline-block',
+                                                    width: '20px',
+                                                    height: '20px',
+                                                    borderRadius: '50%',
+                                                    backgroundColor: x.CategoryColor,
+                                                    border: '1px solid #ccc',
+                                                    verticalAlign: 'middle'
+                                                }}
+                                                title={x.CategoryColor}
+                                            ></span>
+                                        </td>
                                     </tr>
                                 ))
                                 : <tr><td colSpan="3" className="text-center">No hay categorías para mostrar</td></tr>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import './ListPage.css'
 import { inventoryLocationService } from '../../api/services';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
 import AddInvLocationModal from '../../components/modal/AddInvLocationModal';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function InventoryLocationList() {
+    const location = useLocation();
     const [inventoryLocations, setInventoryLoc] = useState([]);
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(null);
@@ -141,7 +142,7 @@ export default function InventoryLocationList() {
             </div>
             <div className='row align-items-center'>
                 <div className="col-12">
-                    <table className="table table-hover">
+                    <table className="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -156,7 +157,7 @@ export default function InventoryLocationList() {
                             {inventoryLocations?.length >= 1
                                 ? inventoryLocations.map((x) => (
                                     <tr key={x.Id}>
-                                        <td>{x.Id}</td>
+                                        <td><Link to={`/invloc/${x.Id}`}>{x.Id}</Link></td>
                                         <td>{x.LocationName}</td>
                                         <td>{x.LocationCode}</td>
                                         <td>{x.Capacity}</td>

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
-import './Auth.css'
+import { useEffect, useState } from 'react';
 import { addressService, userService } from '../../api/services';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-export default function Register() {
-    const navigate = useNavigate();
+export default function UserDetails() {
+    const { user } = useAuth();
+    const id = user.userId;
     const [userData, setUserData] = useState({
+        id: '',
         userName: '',
         password: '',
         rol: '',
@@ -20,6 +20,7 @@ export default function Register() {
     });
 
     const [addressData, setAddressData] = useState({
+        id: '',
         address1: '',
         address2: '',
         postalCode: 0,
@@ -27,7 +28,12 @@ export default function Register() {
         country: ''
     });
 
+    const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(null);
+
+    useEffect(() => {
+        fetch();
+    }, []);
 
     useEffect(() => {
         if (alert) {
@@ -35,6 +41,47 @@ export default function Register() {
             return () => clearTimeout(timeout);
         }
     }, [alert]);
+
+    const fetch = async () => {
+        try {
+            let user = await userService.details(id);
+            if (!user) {
+                setAlert({
+                    type: 'danger',
+                    message: 'Error obteniendo datos del usuario'
+                });
+                return;
+            }
+            setUserData({
+                id: id,
+                userName: user.UserName,
+                password: '',
+                rol: user.Rol,
+                firstName: user.FirstName,
+                middleName: user.MiddleName,
+                lastName: user.LastName,
+                secondLastName: user.SecondLastName,
+                email: user.Email,
+                phoneNumber: user.PhoneNumber,
+                addressId: user.AddressId
+            });
+            setAddressData({
+                id: user.AddressId,
+                address1: user.Address1,
+                address2: user.Address2,
+                postalCode: user.PostalCode,
+                city: user.City,
+                country: user.Country
+            });
+            setLoading(false);
+        } catch (error) {
+            setAlert({
+                type: 'danger',
+                message: error.message || 'Error obteniendo datos del usuario'
+            });
+            setLoading(false);
+        }
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,49 +99,32 @@ export default function Register() {
         }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const newAddress = await addressService.add(addressData);
-            
-
-            if (newAddress && newAddress.id) {
-                const newUserData = {
-                    ...userData,
-                    addressId: newAddress.id,
-                }
-
-                await userService.add(newUserData);
-
-                navigate('/', {
-                    state: {
-                        alert: {
-                            type: 'success',
-                            message: 'Usuario creado con éxito'
-                        }
-                    }
-                });
-            } else {
-                setAlert({
-                    type: 'danger',
-                    message: 'Error creando Dirección'
-                });
-            }
+            await addressService.update(addressData.id, addressData);
+            await userService.update(id, userData);
+            setAlert({
+                type: 'success',
+                message: 'Usuario actualizado con éxito'
+            });
         } catch (error) {
             setAlert({
                 type: 'danger',
-                message: error.message ||'Error creando usuario'
+                message: error.message || 'Error al actualizar el usuario'
             });
         }
     };
 
+    if (loading) return <div>Cargando...</div>;
+
     return (
-        <div className='auth-container container-fluid'>
+        <div className='productDetails-container container-fluid'>
+            {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
             <div className='row'>
-                {alert && <div className={`alert alert-${alert.type}`}>{alert.message}</div>}
                 <div className='col ps-5 pe-5'>
                     <div className='mb-5'>
-                        <h3 className='mb-5'>Nuevo Usuario</h3>
+                        <h3 className='mb-5'>Detalles del Usuario</h3>
                         <div className="mb-3">
                             <input
                                 type="text"
@@ -113,10 +143,9 @@ export default function Register() {
                                 className="form-control"
                                 id="password"
                                 name="password"
-                                placeholder='Contraseña'
+                                placeholder='Nueva Contraseña'
                                 value={userData.password}
                                 onChange={handleChange}
-                                required
                             />
                         </div>
                         <div className="mb-3">
@@ -269,8 +298,7 @@ export default function Register() {
                         </div>
                     </div>
                     <div className='mt-3'>
-                        <button type="button" onClick={handleSubmit} className="btn btn-primary">Registrarse</button>
-                        <span className='ms-3'><Link to={'/'}>Iniciar sesión</Link></span>
+                        <button type="button" onClick={handleSave} className="btn btn-primary">Guardar cambios</button>
                     </div>
                 </div>
             </div>

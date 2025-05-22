@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import './ListPage.css'
 import { stockTransactionService } from '../../api/services';
-import { Link } from 'react-router-dom';
 import Pagination from '../../components/pagination/Pagination';
 import { SEARCH_BY_OPTIONS } from '../../utils/constants';
 
@@ -11,6 +9,7 @@ export default function StockTransactionList() {
     const [alert, setAlert] = useState(null);
     const [totalPages, setTotalPages] = useState(1);
     const [searchBy, setSearchBy] = useState(null);
+    const [isListFilter, setIsListFilter] = useState(false);
     const [filters, setFilters] = useState({
         searchBy: null,
         searchValue: null,
@@ -23,13 +22,21 @@ export default function StockTransactionList() {
     }, [filters]);
 
     useEffect(() => {
+        setIsListFilter(searchBy === 'Type');
         setFilters({
             searchBy: null,
             searchValue: null,
             page: 1,
             limit: 10
         })
-    }, [searchBy])
+    }, [searchBy]);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     const fetch = async () => {
         try {
@@ -92,7 +99,22 @@ export default function StockTransactionList() {
                             </select>
                         </div>
 
-                        {searchBy && (
+                        {isListFilter && (
+                            <div>
+                                <select
+                                    className="form-select"
+                                    value={filters.searchValue ?? ''}
+                                    onChange={(e) => handleSetFilters(e.target.value)}
+                                >
+                                    <option value="">Todos los tipos</option>
+                                    <option value='TRANSFER'>TRANSFER</option>
+                                    <option value='INCREMENT'>INCREMENT</option>
+                                    <option value='DECREMENT'>DECREMENT</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {!isListFilter && searchBy && (
                             <div>
                                 <input
                                     type="text"
@@ -109,25 +131,33 @@ export default function StockTransactionList() {
             </div>
             <div className='row align-items-center'>
                 <div className="col-12">
-                    <table className="table table-hover">
+                    <table className="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Tipo</th>
-                                <th scope="col">Producto</th>
                                 <th scope="col">Usuario</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Cantidad modificada</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Ubicación anterior</th>
+                                <th scope="col">Ubicación nueva</th>
                             </tr>
                         </thead>
                         <tbody>
                             {stockTransactions?.length >= 1
                                 ? stockTransactions.map((x) => (
                                     <tr key={x.Id}>
-                                        <td><Link to={`/stockTransaction/${x.Id}`}>{x.Id}</Link></td>
-                                        <td>{x.Date}</td>
+                                        <td>{x.Id}</td>
+                                        <td>{new Date(x.Date).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                                         <td>{x.Type}</td>
-                                        <td>{x.ProductId}</td>
                                         <td>{x.UserId}</td>
+                                        <td>{x.ProductId}</td>
+                                        <td>{x.QuantityChange}</td>
+                                        <td>{x.Description}</td>
+                                        <td>{x.InventoryLocationIdOld}</td>
+                                        <td>{x.InventoryLocationIdNew}</td>
                                     </tr>
                                 ))
                                 : <tr><td colSpan="6" className="text-center">No hay transacciones para mostrar</td></tr>

@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom'
 import './Auth.css'
 import { useAuth } from '../../context/AuthContext';
 import { postLogin } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+    const location = useLocation();
     const { login } = useAuth();
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
@@ -13,6 +14,20 @@ export default function Login() {
         password: ''
     });
     const [alert, setAlert] = useState(null);
+
+    useEffect(() => {
+        if (location.state?.alert) {
+            window.history.replaceState({}, document.title);
+            setAlert(location.state.alert);
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        if (alert) {
+            const timeout = setTimeout(() => setAlert(null), 6000);
+            return () => clearTimeout(timeout);
+        }
+    }, [alert]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

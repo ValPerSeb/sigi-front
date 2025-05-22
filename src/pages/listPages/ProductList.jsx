@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import AddProductModal from '../../components/modal/AddProductModal';
-import './ListPage.css'
 import { productService, categoryService, inventoryLocationService, supplierService } from '../../api/services';
 import { Link, useLocation } from 'react-router-dom';
 import Pagination from '../../components/pagination/Pagination';
@@ -217,7 +216,7 @@ export default function ProductList() {
             </div>
             <div className='row align-items-center'>
                 <div className="col-12">
-                    <table className="table table-hover">
+                    <table className="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
